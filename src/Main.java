@@ -1,25 +1,52 @@
 import java.util.Random;
-import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
-
-        System.out.println("Welcome to Single Player Snake and Ladder Game!");
         playGame();
     }
-    private static int rolldice(){
-        Random r = new Random();
-        return r.nextInt(6);
+
+    // Simulates rolling a six-sided die
+    private static int rollDice() {
+        Random random = new Random();
+        return random.nextInt(6) + 1;
     }
-    private static void playGame(){
+
+    // Moves the player based on the current position and the value rolled on the die
+    private static int movePlayer(int currentPosition, int diceValue) {
+        return currentPosition + diceValue;
+    }
+
+    // Main game logic for Snake and Ladder
+    private static void playGame() {
         int playerPosition = 0;
         int targetPosition = 100;
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Initial player position : "+playerpos);
-        System.out.println("ENTER TO ROLL THE DIE :");
-        String stringValue = scanner.nextLine();
-        int dicevalue = rolldice();
-        System.out.println("You Rolled : "+dicevalue);
+        System.out.println("Welcome to Snake and Ladder Game!");
+
+        while (playerPosition < targetPosition) {
+            int diceValue = rollDice();
+            System.out.println("You rolled a " + diceValue);
+
+            // Check if the player is close to 100 and needs a precise roll
+            if (playerPosition >= 94) {
+                int remainingDistance = targetPosition - playerPosition;
+                if (diceValue > remainingDistance) {
+                    System.out.println("Roll again.");
+                    continue;  // Roll again
+                }
+            }
+
+            // Move the player based on the dice value
+            playerPosition = movePlayer(playerPosition, diceValue);
+            System.out.println("Your current position is " + playerPosition);
+
+            // Check if the player landed on a Snake or Ladder and update the position
+            playerPosition = checkSnakeAndLadder(playerPosition);
+        }
+
+        System.out.println("Congratulations! You WON.");
     }
+
+    // Checks if the player landed on a Snake or Ladder and updates the position accordingly
     private static int checkSnakeAndLadder(int position) {
         switch (position) {
             case 12:
@@ -43,4 +70,5 @@ public class Main {
             default:
                 return position;
         }
+    }
 }
